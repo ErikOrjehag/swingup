@@ -44,7 +44,7 @@ int main()
     hN << x1;
     hN << x3;
     
-    const int N = 100;
+    const int N = 40;
     const float Ts = 0.025;
     const float tStart = 0.0;
     const float tEnd = Ts * (float)N;
@@ -115,19 +115,16 @@ int main()
     window.addSubplot(xInit(0), "angle");
     window.addSubplot(xInit(1), "vel");
     window.addSubplot(xInit(2), "rotvel");
-    window.addSubplot(u0(0), "u");
-    
+    window.addSubplot(u0(0), "u");  
     window.plot();
     #endif
 
     #if FALSE
-
     ocp.subjectTo(ACADO::AT_START, x1 == x0(0));
     ocp.subjectTo(ACADO::AT_END, x1 == 0);
     ocp.subjectTo(ACADO::AT_START, x2 == x0(1));
     ocp.subjectTo(ACADO::AT_START, x3 == x0(2));
-    
-    //#if FALSE
+
     ACADO::DMatrix Q(h.getDim(), h.getDim());
     Q << 1, 0, 0,
          0, 1, 0,
@@ -189,7 +186,7 @@ int main()
     mpc.set(ACADO::GENERATE_MAKE_FILE, NO);
     mpc.set(ACADO::GENERATE_TEST_FILE, NO);
 
-    mpc.exportCode("mpcexport");
+    mpc.exportCode("../mpcexport");
     //#endif
 
     return 0;

@@ -8,9 +8,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from time import sleep, time
 
-cmpc = ctypes.CDLL("/home/erik/Code/bullet/mpcexport/libacado_exported_rti.so")
+cmpc = ctypes.CDLL("/home/erik/Code/swingup/mpcexport/libacado_exported_rti.so")
 
-N = 100
+N = 40
 dt = 0.025
 T = N * dt
 
@@ -50,6 +50,7 @@ def runMPC(theta, thetadot, omega, itr=1):
 if __name__ == "__main__":
 
     fig, ax = plt.subplots(1)
+    fig.canvas.draw()
     fig.show()
 
     ax.set_xlim([0, T])

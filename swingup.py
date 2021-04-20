@@ -1,112 +1,53 @@
 
-from threading import Thread
+from com import send_packet, read_packet
 import serial
-from time import time, sleep
+import time
 import mpcexport.test as mpc
 import numpy as np
-import math
 from matplotlib import pyplot as plt
 
-last_received = ""
-new_data_available = False
+def main():
+    arduino = serial.Serial('/dev/ttyUSB0', 2000000, timeout=.01)
+    time.sleep(3)
 
-arm_rad = None
-arm_rad_per_s = None
-motor_rad_per_s = None
-
-def receiving(ser):
-    global last_received
-    global new_data_available
-    global arm_rad
-    global arm_rad_per_s
-    global motor_rad_per_s
-
-    t = time()
-    arm_rad_prev = None
-
-    buffer = ""
-    while True:
-
-        buffer += ser.read(ser.inWaiting()).decode("UTF-8")
-        if "\n" in buffer:
-            last_received, buffer = buffer.split("\n")[-2:]
-
-            if last_received[:2] == "->":
-            
-                data = last_received[2:].split(",")
-                try:
-                    motor_rad_per_s = float(data[0])
-                except:
-                    motor_rad_per_s = 0.0
-
-                try:
-                    arm_rad = float(data[1])
-                except:
-                    arm_rad = 0.0
-
-                if arm_rad_prev is None:
-                    arm_rad_prev = arm_rad
-
-                dt = time() - t
-                arm_rad_per_s = (arm_rad - arm_rad_prev) / dt
-                t = time()
-                arm_rad_prev = arm_rad
-
-                new_data_available = True
-
-if __name__ ==  '__main__':
-    
     mpc.initMPC()
-    mpc.runMPC(math.pi, 0, 0, itr=200)
+    mpc.runMPC(np.pi, 0, 0, itr=200)
 
     fig, ax = plt.subplots(1)
+    fig.canvas.draw()
     ax.set_xlim([0, mpc.T])
     ax.set_ylim([-2*np.pi, 2*np.pi])
     fig.show()
 
+    ctrl = 0
     x = np.zeros(mpc.N+1)
     xt = np.linspace(0., mpc.T, len(x))
     line = ax.plot(xt, x, 'r', animated=True)[0]
     bg = fig.canvas.copy_from_bbox(ax.bbox)
 
-    arduino = serial.Serial('/dev/ttyUSB0', 2000000, timeout=.01)
-
-    Thread(target=receiving, args=(arduino,)).start()
-
-    t = time()
-
     while True:
+        t = time.time()
+        
+        send_packet(arduino, '<h', [ctrl])
 
-        if new_data_available:
-            new_data_available = False
-            
-            """
-            print(f"last_received: {last_received}")
-            print(f"motor_rad_per_s: {motor_rad_per_s:.2f}")
-            print(f"arm_rad: {arm_rad:.2f}")
-            print(f"arm_rad_per_s: {arm_rad_per_s:.2f}")
-            print("--------------------")
-            """
+        payload = read_packet(arduino, '<ih')
+        if payload is None:
+            print('none')
+            continue
 
-            t_before = time()
-            u, x = mpc.runMPC(arm_rad, arm_rad_per_s, motor_rad_per_s) #arm_rad_per_s, motor_rad_per_s)
-            th = x[0::3]
+        theta, omega = payload
 
-            fig.canvas.restore_region(bg)
-            line.set_ydata(th)
-            ax.draw_artist(line)
-            fig.canvas.blit(ax.bbox)
-            
-            #u = math.sin(time())*0.15
-            u *= 0.15
+        u, x = mpc.runMPC(np.pi, 0, 0, itr=1)
+        th = x[0::3]
 
-            arduino.write(f'{u:.3f}'.encode())
-            
-            t_mpc = time() - t_before
+        fig.canvas.restore_region(bg)
+        line.set_ydata(th)
+        ax.draw_artist(line)
+        fig.canvas.blit(ax.bbox)
 
-            dt = time() - t
-            t = time()
-            #print(f"HZ: {int(1/dt)}")
+        dt = time.time() - t
+        if dt > mpc.dt:
+            print('Can not keep up')
 
-            sleep_time = max(0.0, mpc.dt - dt)
-            sleep(sleep_time)
+if __name__ ==  '__main__':
+    main()

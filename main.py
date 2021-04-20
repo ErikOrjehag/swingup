@@ -44,6 +44,7 @@ def runMPC(theta, thetadot, omega):
 def main():
 
     fig, ax = plt.subplots(1)
+    fig.canvas.draw()
     fig.show()
 
     ax.set_xlim([0, 1])

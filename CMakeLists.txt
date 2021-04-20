@@ -18,8 +18,8 @@ include_directories(
     codegen/qpoases/SRC
 )
 
-#add_executable( genmpc genmpc.cpp)
-add_executable( genmpc genwalk.cpp)
+add_executable( genmpc genmpc.cpp)
+#add_executable( genmpc genwalk.cpp)
 
 target_link_libraries( genmpc ${ACADO_SHARED_LIBRARIES} )
 

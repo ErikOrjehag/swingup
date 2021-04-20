@@ -25,10 +25,9 @@ endif
 
 CCACHE_APP := $(shell which ccache 2>/dev/null)
 
-CFLAGS   = -fPIC -O3 -finline-functions -I. -I./qpoases
+# Added -fPIC
+CFLAGS = -fPIC -O3 -finline-functions -I. -I./qpoases
 CXXFLAGS = -fPIC -O3 -finline-functions -I. -I./qpoases -I./qpoases/INCLUDE -I./qpoases/SRC
-#LDFLAGS = -shared
-
 CC     = $(CCACHE_APP) gcc
 CXX    = $(CCACHE_APP) g++
 
@@ -49,7 +48,7 @@ OBJECTS = \
 	acado_auxiliary_functions.o
 
 .PHONY: all
-all: libacado_exported_rti.a test
+all: libacado_exported_rti.so libacado_exported_rti.a test
 
 test: ${OBJECTS} test.o
 
@@ -72,4 +71,4 @@ ${OBJECTS} : acado_qpoases_interface.hpp
 
 .PHONY : clean
 clean :
-	-rm -f *.o *.a *.so ./qpoases/*.o ./qpoases/SRC/*.o ./qpoases/SRC/*.a test
+	-rm -f *.o *.a ./qpoases/*.o ./qpoases/SRC/*.o ./qpoases/SRC/*.a test
