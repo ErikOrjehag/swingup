@@ -48,7 +48,7 @@ def receiving(arduino):
         start_time = time.time()
         payload = None
         while payload is None and time.time() - start_time < 3:
-            payload = read_packet(arduino, '<ih')
+            payload = read_packet(arduino, '<iiiHHh')
             if payload is None:
                 print('none')
         if payload is None:

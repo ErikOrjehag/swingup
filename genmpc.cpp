@@ -12,17 +12,20 @@ namespace std
 
 int main()
 {
-    const float r1 = 0.075;
+    /*const float r1 = 0.075;
     const float r2 = r1 + 0.02;
     const float thick = 0.009;
     const float m_disk = M_PI * (r2*r2-r1*r1) * thick * 2700.f;
+    const float Ir = 0.5*m_disk*(r1*r1+r2*r2) * 1.5; // 0.008125, add 10% for motor intertia
+    std::cout << Ir << std::endl; 0.0028519
+    std::cout << 0.5*m_disk*(r1*r1+r2*r2) << std::endl;
+    exit(0);*/
+
     const float l = 0.15f;
     const float g = 9.82f;
-    const float Ir = 0.5*m_disk*(r1*r1+r2*r2) * 1.5; // 0.008125, add 10% for motor intertia
-    const float m = 0.41;
+    const float Ir = 0.01209677419 * 0.5; // real -> 0.01209677419; // izz="0.008125"
+    const float m = 0.43;
     const float I = Ir + m*l*l;
-
-    std::cout << m_disk << std::endl;
 
     ACADO::Control u;
 

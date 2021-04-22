@@ -71,4 +71,4 @@ ${OBJECTS} : acado_qpoases_interface.hpp
 
 .PHONY : clean
 clean :
-	-rm -f *.o *.a ./qpoases/*.o ./qpoases/SRC/*.o ./qpoases/SRC/*.a test
+	-rm -f *.o *.a *.so ./qpoases/*.o ./qpoases/SRC/*.o ./qpoases/SRC/*.a test

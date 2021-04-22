@@ -4,7 +4,12 @@
 unsigned pinA = 3;
 unsigned pinB = 4;
 
-int32_t theta = 0;
+int32_t theta0 = 0;
+int32_t theta1 = 0;
+int32_t theta2 = 0;
+uint64_t t0 = 0;
+uint64_t t1 = 0;
+uint64_t t2 = 0;
 int16_t omega = 0;
 
 MCP2515 mcp2515(10);
@@ -14,7 +19,11 @@ struct RxData {
 };
 
 struct TxData {
-  int32_t theta;
+  int32_t theta0;
+  int32_t theta1;
+  int32_t theta2;
+  uint16_t dt1;
+  uint16_t dt2;
   int16_t omega;
 };
 
@@ -48,7 +57,6 @@ uint8_t calc_checksum(void* data, uint8_t len) {
 }
 
 bool read_packet() {
-  
   uint8_t payload_length, checksum, rx;
   uint8_t packet_size = sizeof(struct RxPacket);
 
@@ -91,23 +99,22 @@ bool read_packet() {
   return true;
 }
 
-void send_packet(int32_t theta, int16_t omega) {
-  tx_packet.len = sizeof(struct TxData);
-
-  tx_packet.tx_data.theta = theta;
-  tx_packet.tx_data.omega = omega;
-
+void send_packet(){
   tx_packet.checksum = calc_checksum(&tx_packet.tx_data, tx_packet.len);
-
   Serial.write((char*)&tx_packet, sizeof(tx_packet));
 }
 
 void pinAChange() {
+  theta0 = theta1;
+  theta1 = theta2;
   if (digitalRead(pinA) != digitalRead(pinB)) {
-    theta++;
+    theta2 = theta1 + 1;
   } else {
-    theta--;
+    theta2 = theta1 - 1;
   }
+  t0 = t1;
+  t1 = t2;
+  t2 = micros();
 }
 
 void setup() {
@@ -118,6 +125,7 @@ void setup() {
   Serial.begin(2000000);
   Serial.setTimeout(1);
 
+  tx_packet.len = sizeof(struct TxData);
   tx_packet.start_seq = 0x0210;
   tx_packet.end_seq = 0x0310;
 
@@ -162,8 +170,15 @@ void loop() {
   }
 
   noInterrupts();
-  int32_t th = theta;
+  tx_packet.tx_data.theta0 = theta0;
+  tx_packet.tx_data.theta1 = theta1;
+  tx_packet.tx_data.theta2 = theta2;
+  tx_packet.tx_data.dt1 = (t0 - t1);
+  tx_packet.tx_data.dt2 = (t1 - t2);
+  tx_packet.tx_data.omega = omega;
   interrupts();
+
+  send_packet();
 
   /*Serial.print(-1000);
   Serial.print(" ");
@@ -171,10 +186,8 @@ void loop() {
   Serial.print(" ");
   Serial.print(0);
   Serial.print(" ");
-  Serial.print(omega);
+  Serial.print(tx_packet.tx_data.omega);
   Serial.print(" ");
-  Serial.print(th);
+  Serial.print(tx_packet.tx_data.theta2);
   Serial.println();*/
-
-  send_packet(th, omega);
 }

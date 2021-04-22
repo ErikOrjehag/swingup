@@ -88,14 +88,18 @@ def main():
     min_dt = 1./240
     dt = min_dt if target_dt is None else target_dt
 
+    p.setPhysicsEngineParameter(enableFileCaching=0)
     plane_id = p.loadURDF("plane.urdf")
     robot_id = p.loadURDF(
-        "wheel_robot.urdf", 
+        "wheel_robot.urdf",
         [0, 0, 0.5], 
         p.getQuaternionFromEuler([0, 0, 0]),
+        flags=p.URDF_USE_INERTIA_FROM_FILE,
         useFixedBase=True)
     motor_id = 1
     joint_ids = list(range(p.getNumJoints(robot_id)))
+
+    print(joint_ids)
 
     p.setJointMotorControlArray(
         robot_id,

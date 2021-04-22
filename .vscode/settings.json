@@ -60,6 +60,9 @@
         "typeinfo": "cpp",
         "*.ipp": "cpp",
         "core": "cpp",
-        "*.txx": "cpp"
+        "*.txx": "cpp",
+        "bit": "cpp",
+        "numeric": "cpp",
+        "random": "cpp"
     }
 }
