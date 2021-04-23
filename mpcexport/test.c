@@ -68,8 +68,8 @@ int initMPC()
 	for (i = 0; i < NU * N; ++i)  acadoVariables.u[ i ] = 0.0;
 
 	/* Initialize lower and upper bounds on controls */
-	for (i = 0; i < N; ++i)  acadoVariables.lbValues[ i ] = -0.5;
-	for (i = 0; i < N; ++i)  acadoVariables.ubValues[ i ] = 0.5;
+	for (i = 0; i < N; ++i)  acadoVariables.lbValues[ i ] = -0.4;
+	for (i = 0; i < N; ++i)  acadoVariables.ubValues[ i ] = 0.4;
 
 	/* Initialize lower and upper bounds on states */
 	for (i = 0; i < N; ++i)  acadoVariables.lbAValues[ i ] = -30.0;
@@ -86,14 +86,19 @@ int initMPC()
 	acadoVariables.W[0] = 1.0;
 	acadoVariables.W[1] = 0.0;
 	acadoVariables.W[2] = 0.0;//
+
 	acadoVariables.W[3] = 0.0;
 	acadoVariables.W[4] = 0.01;
 	acadoVariables.W[5] = 0.0;//
+
 	acadoVariables.W[6] = 0.0;
 	acadoVariables.W[7] = 0.0;
-	acadoVariables.W[8] = 0.01;//
+	acadoVariables.W[8] = 20.0;//
+
+
 	acadoVariables.WN[0] = 10.0;
 	acadoVariables.WN[1] = 0.0;//
+
 	acadoVariables.WN[2] = 0.0;
 	acadoVariables.WN[3] = 1.0;
 

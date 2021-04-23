@@ -26,20 +26,25 @@ def get_control(u, t):
         return u[i]
 
 def initMPC():
-    mpc.cmpc.initMPC()
+    mpc.initMPC()
+    mpc.runMPC(np.pi, 0, 0, itr=1)
+    #mpc.cmpc.initMPC()
     #mpc.acadoVars.x0[0] = np.pi
     #mpc.acadoVars.x0[1] = 0.0
     #mpc.acadoVars.x0[2] = 0.0
     #mpc.cmpc.runMPC(200)
 
 def runMPC(theta, thetadot, omega):
+    """
     mpc.acadoVars.x0[0] = theta
     mpc.acadoVars.x0[1] = thetadot
     mpc.acadoVars.x0[2] = omega
     mpc.cmpc.runMPC(1)
     u = mpc.acadoVars.u[0]
     x = np.array(mpc.acadoVars.x)[0::3]
-    return u, x
+    return u, x"""
+    u, x = mpc.runMPC(theta, thetadot, omega, itr=1)
+    return u, x[0::3]
 
 def main():
 

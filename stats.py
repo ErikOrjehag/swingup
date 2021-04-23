@@ -5,9 +5,10 @@ import time
 import numpy as np
 
 def nm_to_ctr(nm):
-    NM_PER_AMP = 0.12
-    amp = nm / NM_PER_AMP
-    ctrl = round(2000.0 * amp/32.0)
+    #NM_PER_AMP = 0.12
+    #amp = nm / NM_PER_AMP
+    #ctrl = round(2000.0 * amp/32.0)
+    ctrl = round(nm * 300/0.18 * 0.9)
     return ctrl
 
 def dps_to_radps(dps):
@@ -23,16 +24,17 @@ def main():
     arduino = serial.Serial('/dev/ttyUSB0', 2000000, timeout=.01)
     time.sleep(3)
 
-    #torque = 0.06/4.96 = 0.01209677419
+    #inertia = 0.06/4.96 = 0.01209677419
+    #inertia = 0.03/11 = 0.00272727272
 
-    u = 0.06 # N/M
+    u = 0.03 # N/M
     ctrl = nm_to_ctr(u)
 
     t0 = time.time()
 
     x = []
 
-    while time.time() - t0 < 10:
+    while time.time() - t0 < 5:
         
         send_packet(arduino, '<h', [ctrl])
 

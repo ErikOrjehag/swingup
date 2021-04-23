@@ -21,9 +21,12 @@ int main()
     std::cout << 0.5*m_disk*(r1*r1+r2*r2) << std::endl;
     exit(0);*/
 
+
+
+
     const float l = 0.15f;
     const float g = 9.82f;
-    const float Ir = 0.01209677419 * 0.5; // real -> 0.01209677419; // izz="0.008125"
+    const float Ir = 0.00272727272 * 0.5;
     const float m = 0.43;
     const float I = Ir + m*l*l;
 
@@ -57,6 +60,13 @@ int main()
     //ocp.subjectTo(-2.f*M_PI <= x1 <= 2.f*M_PI);
     ocp.subjectTo(-30 <= x3 <= 30);
     ocp.subjectTo(-0.5 <= u <= 0.5);
+
+
+
+
+
+
+
 
     ACADO::VariablesGrid u0(1, tStart, tEnd, N);
     u0.setZero();
