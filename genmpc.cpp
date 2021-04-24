@@ -51,7 +51,7 @@ int main()
     hN << x3;
     
     const int N = 40;
-    const float Ts = 0.025;
+    const float Ts = 0.025; // 0.025
     const float tStart = 0.0;
     const float tEnd = Ts * (float)N;
 

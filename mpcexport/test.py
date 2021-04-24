@@ -11,7 +11,7 @@ from time import sleep, time
 cmpc = ctypes.CDLL("/home/erik/Code/swingup/mpcexport/libacado_exported_rti.so")
 
 N = 40
-dt = 0.025
+dt = 0.025 # 0.025
 T = N * dt
 
 class ACADOvariables(ctypes.Structure):

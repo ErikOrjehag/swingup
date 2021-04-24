@@ -83,7 +83,7 @@ int initMPC()
 	for (i = 0; i < NYN; ++i)  acadoVariables.yN[ i ] = 0.0;
 
 	/* Initialize weights. */
-	acadoVariables.W[0] = 1.0;
+	acadoVariables.W[0] = 0.1; // 1.0
 	acadoVariables.W[1] = 0.0;
 	acadoVariables.W[2] = 0.0;//
 

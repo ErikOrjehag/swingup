@@ -56,8 +56,8 @@ def main():
     ax.set_ylim([-2*np.pi, 2*np.pi])
     fig.show()
 
-    x = np.zeros(41)
-    xt = np.linspace(0., 2., len(x))
+    x = np.zeros(mpc.N+1)
+    xt = np.linspace(0., mpc.T, len(x))
     line = ax.plot(xt, x, 'r', animated=True)[0]
     bg = fig.canvas.copy_from_bbox(ax.bbox)
 
